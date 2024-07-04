@@ -36,7 +36,7 @@ class Item(Base):
     price = mapped_column(INTEGER, nullable=False)
     file_id = mapped_column(VARCHAR(255), nullable=False)
     file_unique_id = mapped_column(VARCHAR(255), nullable=False)
-    category_id = mapped_column(BIGINT, ForeignKey('category.id'), nullable=False)
+    category_id = mapped_column(BIGINT, ForeignKey('category.id', ondelete='CASCADE'), nullable=False)
     category: Mapped['Category'] = Relationship(back_populates='items')
 
 
