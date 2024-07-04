@@ -12,5 +12,6 @@ class Store(StatesGroup):
 
 
 class Purchase(StatesGroup):
+    select_currency = State()
     create_invoice = State()
     finnal_msg = State()

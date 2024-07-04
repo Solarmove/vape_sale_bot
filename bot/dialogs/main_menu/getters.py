@@ -72,3 +72,16 @@ async def items_in_category_getter(
         'current_photo': current_page_photo
         
     }
+
+
+async def currency_getter(
+    dialog_manager: DialogManager, event_from_user: User, bot: Bot, repo: Repo, **kwargs
+):
+    return {
+        'currencies': [
+            ('LTC', 'ltc'),
+            ('USDT(TRC20)', 'usdttrc20'),
+            ("TRX", 'trx'),
+            ('BTC', 'btc')
+        ]
+    }

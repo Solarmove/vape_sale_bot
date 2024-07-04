@@ -35,4 +35,9 @@ async def on_select_item(call: CallbackQuery, widget: Select, manager: DialogMan
         return
     
     manager.dialog_data.update(item_id=item_id)
-    await manager.start(states.Purchase.create_invoice, data=manager.dialog_data)
+    await manager.start(states.Purchase.select_currency, data=manager.dialog_data)
+
+
+async def on_select_currency(call: CallbackQuery, widget: Select, manager: DialogManager, item_id: str):
+    manager.dialog_data.update(currency=item_id)
+    await manager.switch_to(states.Purchase.create_invoice)

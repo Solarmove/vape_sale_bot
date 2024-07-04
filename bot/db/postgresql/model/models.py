@@ -1,4 +1,5 @@
 from sqlalchemy import (
+    FLOAT,
     ForeignKey,
     VARCHAR,
     BIGINT,
@@ -33,7 +34,7 @@ class Item(Base):
     id = mapped_column(BIGINT, primary_key=True, autoincrement=True)
     name = mapped_column(VARCHAR(255), nullable=False)
     description = mapped_column(TEXT, nullable=False)
-    price = mapped_column(INTEGER, nullable=False)
+    price = mapped_column(FLOAT, nullable=False)
     file_id = mapped_column(VARCHAR(255), nullable=False)
     file_unique_id = mapped_column(VARCHAR(255), nullable=False)
     category_id = mapped_column(BIGINT, ForeignKey('category.id', ondelete='CASCADE'), nullable=False)

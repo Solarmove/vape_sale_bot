@@ -26,7 +26,7 @@ def main_menu_kb():
 def categories_kb(on_click):
     return ScrollingGroup(
         Select(
-            Format("{item[1]}"),
+            Format("{item[1]} [{item[2]}]"),
             id='category',
             items='categories_list',
             on_click=on_click,
@@ -53,4 +53,17 @@ def items_in_category_kb(on_click):
         width=1,
         hide_on_single_page=True,
         on_page_changed=sync_scroll('text_list')
+    )
+
+
+def currency_kb(on_click):
+    return Group(
+        Select(
+            Format("{item[0]}"),
+            id='currency',
+            items='currencies',
+            on_click=on_click,
+            item_id_getter=operator.itemgetter(1)
+        ),
+        width=1,
     )
