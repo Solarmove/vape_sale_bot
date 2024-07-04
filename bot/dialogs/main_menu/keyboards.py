@@ -17,7 +17,7 @@ def main_menu_kb():
         Button(
             Const("Админ-панель"),
             id='admin_panel',
-            # on_click=selected.on_select_admin_panel,
+            on_click=selected.on_select_admin_panel,
             when='is_admin'
         )
     )
@@ -49,7 +49,7 @@ def items_in_category_kb(on_click):
             item_id_getter=operator.itemgetter(0)
         ),
         id='items_list_s_g',
-        height=6,
+        height=1,
         width=1,
         hide_on_single_page=True,
         on_page_changed=sync_scroll('text_list')

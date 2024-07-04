@@ -5,10 +5,10 @@ import os
 from aiogram import F, Bot, Dispatcher, Router
 from aiogram.client.default import DefaultBotProperties
 from aiogram.fsm.storage.redis import (
-    DefaultKeyBuilder,
     RedisEventIsolation,
     RedisStorage,
 )
+from aiogram.fsm.storage.base import DefaultKeyBuilder
 from aiogram_dialog import setup_dialogs
 from aiogram_i18n.cores import FluentRuntimeCore
 from sqlalchemy.ext.asyncio import (
@@ -41,7 +41,7 @@ async def main():
     db_pool = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
     await add_default_objects(db_pool)
 
-    bot = Bot(token=config.bot_token, default=DefaultBotProperties(parse_mode="HTML"))
+    bot = Bot(token=config.bot_token, default=DefaultBotProperties(parse_mode="HTML", show_caption_above_media=True))
     key_builder = DefaultKeyBuilder(with_destiny=True, with_bot_id=True)
     storage = RedisStorage(redis=redis, key_builder=key_builder)
     event_isolation = RedisEventIsolation(redis, key_builder=key_builder)

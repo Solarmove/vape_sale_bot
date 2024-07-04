@@ -29,7 +29,7 @@ def store_window():
 
 def items_in_category_window():
     return Window(
-        Multi(
+        Multi( 
             Const("Выберите товар"),
             List(
                 Format(
@@ -38,6 +38,7 @@ def items_in_category_window():
                 ),
                 id="text_list",
                 items="items_list",
+                page_size=1
             ),
             sep="\n\n",
         ),

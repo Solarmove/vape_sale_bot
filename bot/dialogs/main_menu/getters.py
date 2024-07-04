@@ -14,7 +14,7 @@ from bot.db.postgresql import Repo
 async def main_menu_getter(
     dialog_manager: DialogManager, event_from_user: User, bot: Bot, repo: Repo, **kwargs
 ):
-    return {"is_admin": event_from_user in config.admins}
+    return {"is_admin": event_from_user.id in config.admins}
 
 
 async def category_getter(
@@ -61,7 +61,7 @@ async def items_in_category_getter(
                     type=ContentType.PHOTO,
                 )
             )
-        dialog_manager.dialog_data.update(items_list=items_list, media_list=media_list)
+        # dialog_manager.dialog_data.update(items_list=items_list, media_list=media_list)
     try:
         current_page_photo = media_list[current_page]
     except IndexError:

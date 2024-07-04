@@ -189,7 +189,7 @@ async def on_send_photo_for_new_item(
     else:
         await message.answer("Отправьте фото")
         return
-    await manager.switch_to(states.CreateItem.send_photo)
+    await manager.switch_to(states.CreateItem.confirm)
 
 
 async def on_save_new_item(call: CallbackQuery, widget: Button, manager: DialogManager):
@@ -216,7 +216,7 @@ async def on_save_new_item(call: CallbackQuery, widget: Button, manager: DialogM
             show_alert=True,
         )
         return
-    await call.answer(f"Товар <b>{name}</b> добавлен", show_alert=True)
+    await call.answer(f"Товар {name} добавлен", show_alert=True)
     await manager.done()
 
 

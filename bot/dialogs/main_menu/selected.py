@@ -9,12 +9,16 @@ from aiogram_i18n import I18nContext
 
 from bot.db.postgresql import Repo
 from bot.db.postgresql.model.models import User
+from bot.dialogs.admin_menu.states import AdminMenu
 from bot.dialogs.main_menu import states
 
 
 async def on_select_store(call: CallbackQuery, widget: Button, manager: DialogManager):
     await manager.start(states.Store.select_category)
 
+
+async def on_select_admin_panel(call: CallbackQuery, widget: Button, manager: DialogManager):
+    await manager.start(AdminMenu.select_action)
 
 async def on_select_category(call: CallbackQuery, widget: Select, manager: DialogManager, item_id: str):
     try:

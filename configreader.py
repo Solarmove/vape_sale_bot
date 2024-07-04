@@ -14,6 +14,10 @@ class Config(BaseSettings):
     # DB
     postgredsn: PostgresDsn
 
+    # NowPayments Keys
+    x_api_key: str
+    ipn_callback: str
+
 
     @field_validator("bot_mode")
     def validate_bot_mode(cls, values):

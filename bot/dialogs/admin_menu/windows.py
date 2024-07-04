@@ -92,10 +92,11 @@ def select_item_for_edit_window():
             List(
                 Format(
                     "<b>{item[1]}</b>\n\nЦена: <code>{item[2]} UAH</code>\n\n"
-                    "<i>{item[3]}<"
+                    "<i>{item[3]}</i>"
                 ),
                 id="text_list",
                 items="items_list",
+                page_size=1,
             ),
             sep="\n\n",
         ),
@@ -106,6 +107,7 @@ def select_item_for_edit_window():
             on_click=selected.on_start_add_item,
         ),
         items_in_category_kb(selected.on_select_item_for_edit),
+        Back(Const("Назад")),
         state=states.EditItem.select_item,
         getter=items_in_category_getter,
     )
@@ -154,13 +156,9 @@ def confirm_new_item_create_window():
     return Window(
         Multi(
             Const("Подтвердите создание нового товара"),
-            List(
-                Format(
-                    "<b>{name}</b>\n\nЦена: <code>{price} UAH</code>\n\n"
-                    "<i>{desc}<"
-                ),
-                id="text_list",
-                items="items_list",
+            Format(
+                "<b>{name}</b>\n\nЦена: <code>{price} UAH</code>\n\n"
+                "<i>{desc}</i>"
             ),
             sep="\n\n",
         ),

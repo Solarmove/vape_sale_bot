@@ -39,6 +39,7 @@ class Item(Base):
     file_unique_id = mapped_column(VARCHAR(255), nullable=False)
     category_id = mapped_column(BIGINT, ForeignKey('category.id', ondelete='CASCADE'), nullable=False)
     category: Mapped['Category'] = Relationship(back_populates='items')
+    transactions: Mapped[list['Transactions']] = Relationship(back_populates='item')
 
 
 class Transactions(Base):
