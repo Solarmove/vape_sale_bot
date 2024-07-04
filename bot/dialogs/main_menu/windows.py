@@ -34,7 +34,7 @@ def items_in_category_window():
             List(
                 Format(
                     "<b>{item[1]}</b>\n\nЦена: <code>{item[2]} UAH</code>\n\n"
-                    "<i>{item[3]}<"
+                    "<i>{item[3]}</i>"
                 ),
                 id="text_list",
                 items="items_list",
