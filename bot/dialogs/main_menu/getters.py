@@ -3,9 +3,72 @@ from aiogram.enums import ContentType
 from aiogram.types import User
 from aiogram.utils.deep_linking import create_start_link
 from aiogram_dialog import DialogManager
-from aiogram_dialog.api.entities import MediaAttachment
+from aiogram_dialog.widgets.common.scroll import ManagedScroll
+from aiogram_dialog.api.entities import MediaAttachment, MediaId
 from aiogram_i18n import I18nContext
+from configreader import config
 
 from bot.db.postgresql import Repo
-from bot.services.qr_service import create_qr_code
 
+
+async def main_menu_getter(
+    dialog_manager: DialogManager, event_from_user: User, bot: Bot, repo: Repo, **kwargs
+):
+    return {"is_admin": event_from_user in config.admins}
+
+
+async def category_getter(
+    dialog_manager: DialogManager, event_from_user: User, bot: Bot, repo: Repo, **kwargs
+):
+
+    categories_list = dialog_manager.dialog_data.get("categories_list", [])
+    if not categories_list:
+        categories_model = await repo.user_repo.get_categories()
+        for category in categories_model:
+            items_in_category_count = await repo.user_repo.get_items_count_in_category(
+                category.id
+            )
+            categories_list.append(
+                (category.id, category.name, items_in_category_count)
+            )
+        dialog_manager.dialog_data.update(categories_list=categories_list)
+    return {"categories_list": categories_list}
+
+
+async def items_in_category_getter(
+    dialog_manager: DialogManager, event_from_user: User, bot: Bot, repo: Repo, **kwargs
+):
+    category_id = dialog_manager.dialog_data.get("category_id")
+    scroll: ManagedScroll | None = dialog_manager.find("items_list_s_g")
+    if scroll is None:
+        raise ValueError("scroll items_list_s_g is None")
+    if category_id is None:
+        raise ValueError("category_id is None")
+
+    current_page = await scroll.get_page()
+    items_list = dialog_manager.dialog_data.get("items_list", [])
+    media_list = dialog_manager.dialog_data.get("media_list", [])
+    if not items_list or not media_list:
+        items_model = await repo.user_repo.get_items_by_category(category_id)
+        for item in items_model:
+            items_list.append((item.id, item.name, item.price, item.description))
+            media_list.append(
+                MediaAttachment(
+                    file_id=MediaId(
+                        file_id=item.file_id,
+                        file_unique_id=item.file_unique_id,
+                    ),
+                    type=ContentType.PHOTO,
+                )
+            )
+        dialog_manager.dialog_data.update(items_list=items_list, media_list=media_list)
+    try:
+        current_page_photo = media_list[current_page]
+    except IndexError:
+        current_page_photo = None
+    return {
+        "items_list": items_list,
+        "media_list": media_list,
+        'current_photo': current_page_photo
+        
+    }
