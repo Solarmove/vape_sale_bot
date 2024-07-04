@@ -37,3 +37,19 @@ def edit_category_kb(on_click):
         width=1,
         hide_on_single_page=True
     )
+
+
+def edit_item_kb(on_click):
+    return ScrollingGroup(
+        Select(
+            Format("{item[1]}"),
+            id='item_param',
+            items='item_param_list',
+            on_click=on_click,
+            item_id_getter=operator.itemgetter(0)
+        ),
+        id='items_list_s_g',
+        height=6,
+        width=1,
+        hide_on_single_page=True
+    )

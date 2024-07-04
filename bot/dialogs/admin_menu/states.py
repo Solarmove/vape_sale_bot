@@ -56,5 +56,5 @@ class DeleteItem(StatesGroup):
     confirm = State()
 
 
-class ChaangeItemCategory(StatesGroup):
+class EditItemCategory(StatesGroup):
     select_new_category = State()

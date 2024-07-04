@@ -38,3 +38,18 @@ async def new_item_getter(
         )
 
     }
+
+
+async def item_edit_param_list_getter(
+    dialog_manager: DialogManager, event_from_user: User, bot: Bot, repo: Repo, **kwargs
+):
+    return {
+        "item_param_list": [
+            ("name", "Название"),
+            ("description", "Описание"),
+            ("price", "Цена"),
+            ("photo", "Фото"),
+            ('category', 'Категория'),
+            ('delete', 'Удалить товар')
+            ]
+        }

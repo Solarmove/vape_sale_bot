@@ -174,3 +174,76 @@ def confirm_new_item_create_window():
         state=states.CreateItem.confirm,
         getter=getters.new_item_getter,
     )
+
+
+
+def select_edit_param_of_item_window():
+    return Window(
+        Const("Выберите параметр для редактирования"),
+        keyboards.edit_item_kb(selected.on_select_edit_param),
+        Back(Const("Назад")),
+        state=states.EditItem.select_edit_param,
+        getter=getters.item_edit_param_list_getter,
+    )
+
+
+def edit_item_name_window():
+    return Window(
+        Const("Введите новое название товара"),
+        TextInput(id="new_name", on_success=selected.on_change_item_name),
+        Cancel(Const("Отмена")),
+        state=states.EditItemName.enter_new_name,
+    )
+
+
+def edit_item_price_window():
+    return Window(
+        Const("Введите новую цену товара в USDT"),
+        TextInput(id="new_price", on_success=selected.on_change_item_price),
+        Cancel(Const("Отмена")),
+        state=states.EditItemPrice.enter_new_price,
+    )
+
+
+def edit_item_description_window():
+    return Window(
+        Const("Введите новое описание товара (до 500 символов)"),
+        TextInput(id="new_description", on_success=selected.on_change_item_description),
+        Cancel(Const("Отмена")),
+        state=states.EditItemDescription.enter_new_description,
+    )
+
+
+def edit_item_photo_window():
+    return Window(
+        Const("Отправьте новое фото товара"),
+        MessageInput(
+            func=selected.on_send_new_photo_for_item,
+            content_types=ContentType.PHOTO,
+        ),
+        Cancel(Const("Отмена")),
+        state=states.EditItemPhoto.send_new_photo,
+    )
+
+
+def confirm_delete_item_window():
+    return Window(
+        Const("Вы уверены, что хотите удалить товар?"),
+        Button(
+            Const("Да"),
+            id="delete_item",
+            on_click=selected.on_confirm_delete_item,
+        ),
+        Cancel(Const("Нет")),
+        state=states.DeleteItem.confirm,
+    )
+
+
+def edit_item_category_window():
+    return Window(
+        Const("Выберите новую категорию для товара"),
+        categories_kb(selected.on_select_new_item_category),
+        Cancel(Const("Назад")),
+        state=states.EditItemCategory.select_new_category,
+        getter=category_getter,
+    )
