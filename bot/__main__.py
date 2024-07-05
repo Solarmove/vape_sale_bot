@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import asyncio
 import os
-
+from aiohttp import web
 from aiogram import F, Bot, Dispatcher, Router
 from aiogram.client.default import DefaultBotProperties
 from aiogram.fsm.storage.redis import (
@@ -21,6 +21,7 @@ from bot.db.postgresql.base import Base
 from bot.db.redis import redis
 from bot.dialogs import dialogs_list
 from bot.handlers import routers_list
+from bot.handlers.webhooks import handle_np_webhook
 from bot.middlewares.devs_protect import DevsProtectMiddleware
 from bot.middlewares.i18n_dialog import RedisI18nMiddleware
 from bot.services.startup_actions import add_default_objects
@@ -78,9 +79,16 @@ async def main():
     dialog_manager_bg_factory = setup_dialogs(dp)
     dp.include_router(router)
 
+    app = web.Application()
+    app['session_factory'] = db_pool
+    app['bg_factory'] = dialog_manager_bg_factory
+    app['bot'] = bot
+    app.router.add_post(config.webhook_path, handle_np_webhook)
+
     i18n_middleware.setup(dispatcher=dp)
     await bot.delete_webhook(drop_pending_updates=True)
     await set_default_commands(bot)
+    web.run_app(app, port=config.webhook_port, host=config.webhook_host)
     await dp.start_polling(bot)
 
 

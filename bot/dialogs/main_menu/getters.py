@@ -1,3 +1,4 @@
+import logging
 from aiogram import Bot
 from aiogram.enums import ContentType
 from aiogram.types import User
@@ -6,6 +7,8 @@ from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.common.scroll import ManagedScroll
 from aiogram_dialog.api.entities import MediaAttachment, MediaId
 from aiogram_i18n import I18nContext
+from bot.db.postgresql.model.models import Transactions
+from bot.services.now_payments import CreateInvoiceData, CreatedInvoiceResult, NowPayments
 from configreader import config
 
 from bot.db.postgresql import Repo
@@ -84,4 +87,44 @@ async def currency_getter(
             ("TRX", 'trx'),
             ('BTC', 'btc')
         ]
+    }
+
+
+async def invoice_getter(
+    dialog_manager: DialogManager, event_from_user: User, bot: Bot, repo: Repo, **kwargs
+):
+    item_model: Item = await repo.user_repo.get_item(dialog_manager.start_data.get("item_id"))  # type: ignore
+    transaction = Transactions(
+        item_id=item_model.id,
+        user_id=event_from_user.id,
+        status=False,
+    )
+    transaction = await repo.add_one(transaction, commit=False)
+    invoice_data = CreateInvoiceData(
+        price_amount=item_model.price,
+        price_currency='USD',
+        pay_currency=dialog_manager.dialog_data.get("currency"),
+        order_id=str(transaction.id),
+        order_description=item_model.name,
+        ipn_callback_url=config.base_url, # type: ignore
+        # success_url=config.success_url,
+        # cancel_url=config.cancel_url,
+    )
+    
+    try:
+        now_pay = NowPayments(
+        api_key=config.x_api_key,
+        ipn_key=config.ipn_callback,
+    )
+        response: CreatedInvoiceResult = await now_pay.create_invoice(invoice_data)
+    except Exception as e:
+        logging.error(f"Error while creating invoice: {e}")
+        await repo.session.rollback()
+        raise e
+    await repo.session.commit()
+    return {
+        "total_price": item_model.price,
+        "currency": 'USD',
+        'invoice_id': response.order_id,
+        'url': response.invoice_url
     }

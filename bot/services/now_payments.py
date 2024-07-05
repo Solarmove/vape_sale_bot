@@ -1,3 +1,4 @@
+import json
 from pydantic import AnyUrl, BaseModel
 import aiohttp
 
@@ -28,17 +29,7 @@ class CreateInvoiceData(BaseModel):
     success_url: AnyUrl|None = None
     """Url where the customer will be redirected after failed payment"""
     cancel_url: AnyUrl|None = None
-    """boolean, can be true or false. Required for fixed-rate exchanges
-    NOTE: the rate of exchange will be frozen for 20 minutes. 
-    If there are no incoming payments during this period, 
-    the payment status changes to "expired"
-    """
-    fixed_rate: bool|None = None
-    """Boolean, can be true or false. 
-    Required for fixed-rate exchanges with all fees paid by users;
-    NOTE: the rate of exchange will be frozen for 20 minutes.
-    If there are no incoming payments during this period, the payment status changes to "expired" """
-    is_fee_paid_by_user: bool|None = None
+
 
 
 
@@ -70,7 +61,7 @@ class NowPayments:
         self,
         url: str,
         request_type: str,
-        data: dict | None = None,
+        data = None,
         json: dict | None = None,
         params: dict | None = None,
         headers: dict | None = None,
@@ -92,6 +83,8 @@ class NowPayments:
                     url=url, headers=self.headers,
                     data=data, json=json, params=params
                 ) as response:
+                    if response.status != 200:
+                        raise CreateInvoiceError(f"Ошибка создания счета: {response.status} - {await response.text()}")
                     return await response.json()
         else:
             raise ValueError("request_type must be GET or POST")
@@ -100,13 +93,11 @@ class NowPayments:
     async def parse_created_invoice(self, response: dict):
         return CreatedInvoiceResult(**response)
                 
-    async def create_invoice(self, invoice_data: CreateInvoiceData):
-        data = invoice_data.model_dump()
-        url = 'https://api.nowpayments.io/v1/invoice'
-
+    async def create_invoice(self, invoice_data: CreateInvoiceData) -> CreatedInvoiceResult:
+        data = invoice_data.model_dump_json()
+        # url = 'https://api.nowpayments.io/v1/invoice'
+        url = 'https://api-sandbox.nowpayments.io/v1/invoice'
         response = await self.make_request(
-            url=url, request_type="POST", json=data
+            url=url, request_type="POST", data=data
         )
-        if response.status_code != 200:
-            raise CreateInvoiceError(f"Error creating invoice: {response}")
-        return await self.parse_created_invoice(response.json())
+        return await self.parse_created_invoice(response)

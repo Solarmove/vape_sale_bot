@@ -132,7 +132,7 @@ class UserRepo:
     async def get_transaction_by_id(self, transaction_id: int):
         stmt = (
             select(Transactions)
-            .where(Transactions.id == transaction_id)
+            .where(Transactions.id == transaction_id).options(joinedload(Transactions.item), joinedload(Transactions.user))
         )
         result = await self.session.execute(stmt)
         return result.scalars().first()
@@ -166,3 +166,13 @@ class UserRepo:
         )
         result = await self.session.execute(stmt)
         return result.scalars().all()
+    
+    
+    async def update_transaction(self, transaction_id: int, **kwargs):
+        stmt = (
+            update(Transactions)
+            .where(Transactions.id == transaction_id)
+            .values(**kwargs)
+        )
+        await self.session.execute(stmt)
+        await self.session.commit()

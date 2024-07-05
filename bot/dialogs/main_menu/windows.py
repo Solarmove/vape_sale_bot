@@ -2,7 +2,7 @@ from aiogram_dialog import Window
 from aiogram_dialog.widgets.markup.reply_keyboard import ReplyKeyboardFactory
 from aiogram_dialog.widgets.media import DynamicMedia
 from aiogram_dialog.widgets.text import Format, Multi, Const, List
-from aiogram_dialog.widgets.kbd import Cancel, Back, Row
+from aiogram_dialog.widgets.kbd import Cancel, Back, Row, Url
 from magic_filter import F
 
 from bot.dialogs.main_menu import states, selected, getters, keyboards
@@ -57,4 +57,22 @@ def select_currency_window():
         Cancel(Const("Назад")),
         state=states.Purchase.select_currency,
         getter=getters.currency_getter,
+    )
+
+
+def create_invoice_window():
+    return Window(
+        Const("Создание счета"),
+        Format(
+            "Счет на сумму <b>{total_price}</b> успешно создан.\n\n"
+            "Номер транзакции в боте: <code>{invoice_id}</code>\n\n"
+            "<i>Сума автоматически конвертируеца в выбраную вами валюту</i>"
+        ),
+        Url(
+            Const("Оплатить"),
+            Format('{url}')
+        ),
+        Back(Const("Закрыть")),
+        state=states.Purchase.create_invoice,
+        getter=getters.invoice_getter,
     )

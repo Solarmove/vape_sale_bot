@@ -17,6 +17,10 @@ class Config(BaseSettings):
     # NowPayments Keys
     x_api_key: str
     ipn_callback: str
+    webhook_path: str
+    webhook_port: int
+    webhook_host: str
+    base_url: str
 
 
     @field_validator("bot_mode")
