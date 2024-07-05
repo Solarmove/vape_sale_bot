@@ -22,7 +22,6 @@ class Config(BaseSettings):
     webhook_host: str
     base_url: str
 
-
     @field_validator("bot_mode")
     def validate_bot_mode(cls, values):
         if values not in ["dev", "prod"]:

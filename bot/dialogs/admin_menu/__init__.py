@@ -2,9 +2,7 @@ from aiogram_dialog import Dialog
 from . import windows
 
 admin_menu_dialogs_list = [
-    Dialog(
-        windows.admin_menu_window()
-    ),
+    Dialog(windows.admin_menu_window()),
     Dialog(
         windows.edit_category_window(),
         windows.select_edit_category_param_window(),
@@ -48,6 +46,4 @@ admin_menu_dialogs_list = [
     Dialog(
         windows.edit_item_category_window(),
     ),
-
-
 ]

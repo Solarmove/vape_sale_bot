@@ -15,28 +15,24 @@ async def category_edit_param_list_getter(
     dialog_manager: DialogManager, event_from_user: User, bot: Bot, repo: Repo, **kwargs
 ):
     return {
-        "category_param_list": [
-            ("name", "Название"),
-            ('delete', 'Удалить категорию')
-            ]
-        }
+        "category_param_list": [("name", "Название"), ("delete", "Удалить категорию")]
+    }
 
 
 async def new_item_getter(
     dialog_manager: DialogManager, event_from_user: User, bot: Bot, repo: Repo, **kwargs
 ):
     return {
-        'name': dialog_manager.dialog_data.get('name'),
-        'desc': dialog_manager.dialog_data.get('description'),
-        'price': dialog_manager.dialog_data.get('price'),
-        'photo': MediaAttachment(
+        "name": dialog_manager.dialog_data.get("name"),
+        "desc": dialog_manager.dialog_data.get("description"),
+        "price": dialog_manager.dialog_data.get("price"),
+        "photo": MediaAttachment(
             file_id=MediaId(
-                file_id=dialog_manager.dialog_data.get('photo_id'), # type: ignore
-                file_unique_id=dialog_manager.dialog_data.get('photo_unique_id')
+                file_id=dialog_manager.dialog_data.get("photo_id"),  # type: ignore
+                file_unique_id=dialog_manager.dialog_data.get("photo_unique_id"),
             ),
-            type=ContentType.PHOTO
-        )
-
+            type=ContentType.PHOTO,
+        ),
     }
 
 
@@ -49,7 +45,7 @@ async def item_edit_param_list_getter(
             ("description", "Описание"),
             ("price", "Цена"),
             ("photo", "Фото"),
-            ('category', 'Категория'),
-            ('delete', 'Удалить товар')
-            ]
-        }
+            ("category", "Категория"),
+            ("delete", "Удалить товар"),
+        ]
+    }

@@ -26,8 +26,10 @@ async def start(
         return
     user_exists = await repo.user_repo.get_user(message.from_user.id)
     if not user_exists:
-        user = User(id=message.from_user.id, full_name=message.from_user.full_name, username=message.from_user.username)
+        user = User(
+            id=message.from_user.id,
+            full_name=message.from_user.full_name,
+            username=message.from_user.username,
+        )
         await repo.add_one(user)
     await dialog_manager.start(state=MainMenu.select_action, mode=StartMode.RESET_STACK)
-        
-    

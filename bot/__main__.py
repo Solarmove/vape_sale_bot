@@ -42,7 +42,10 @@ async def main():
     db_pool = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
     await add_default_objects(db_pool)
 
-    bot = Bot(token=config.bot_token, default=DefaultBotProperties(parse_mode="HTML", show_caption_above_media=True))
+    bot = Bot(
+        token=config.bot_token,
+        default=DefaultBotProperties(parse_mode="HTML", show_caption_above_media=True),
+    )
     key_builder = DefaultKeyBuilder(with_destiny=True, with_bot_id=True)
     storage = RedisStorage(redis=redis, key_builder=key_builder)
     event_isolation = RedisEventIsolation(redis, key_builder=key_builder)
@@ -80,9 +83,9 @@ async def main():
     dp.include_router(router)
 
     app = web.Application()
-    app['session_factory'] = db_pool
-    app['bg_factory'] = dialog_manager_bg_factory
-    app['bot'] = bot
+    app["session_factory"] = db_pool
+    app["bg_factory"] = dialog_manager_bg_factory
+    app["bot"] = bot
     app.router.add_post(config.webhook_path, handle_np_webhook)
 
     i18n_middleware.setup(dispatcher=dp)
@@ -90,9 +93,7 @@ async def main():
     await set_default_commands(bot)
     runner = web.AppRunner(app)
     await runner.setup()
-    site = web.TCPSite(
-        runner, host=config.webhook_host, port=config.webhook_port
-    )
+    site = web.TCPSite(runner, host=config.webhook_host, port=config.webhook_port)
     await site.start()
     await dp.start_polling(bot)
 

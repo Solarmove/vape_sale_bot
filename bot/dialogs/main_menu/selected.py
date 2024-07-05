@@ -17,31 +17,40 @@ async def on_select_store(call: CallbackQuery, widget: Button, manager: DialogMa
     await manager.start(states.Store.select_category)
 
 
-async def on_select_admin_panel(call: CallbackQuery, widget: Button, manager: DialogManager):
+async def on_select_admin_panel(
+    call: CallbackQuery, widget: Button, manager: DialogManager
+):
     await manager.start(AdminMenu.select_action)
 
-async def on_select_category(call: CallbackQuery, widget: Select, manager: DialogManager, item_id: str):
+
+async def on_select_category(
+    call: CallbackQuery, widget: Select, manager: DialogManager, item_id: str
+):
     try:
         item_id = int(item_id)  # type: ignore
     except ValueError:
         logging.error(f"item_id is not integer: {item_id}")
         return
-    
+
     manager.dialog_data.update(category_id=item_id)
     await manager.switch_to(states.Store.select_item)
 
 
-async def on_select_item(call: CallbackQuery, widget: Select, manager: DialogManager, item_id: str):
+async def on_select_item(
+    call: CallbackQuery, widget: Select, manager: DialogManager, item_id: str
+):
     try:
         item_id = int(item_id)  # type: ignore
     except ValueError:
         logging.error(f"item_id is not integer: {item_id}")
         return
-    
+
     manager.dialog_data.update(item_id=item_id)
     await manager.start(states.Purchase.select_currency, data=manager.dialog_data)
 
 
-async def on_select_currency(call: CallbackQuery, widget: Select, manager: DialogManager, item_id: str):
+async def on_select_currency(
+    call: CallbackQuery, widget: Select, manager: DialogManager, item_id: str
+):
     manager.dialog_data.update(currency=item_id)
     await manager.switch_to(states.Purchase.create_invoice)

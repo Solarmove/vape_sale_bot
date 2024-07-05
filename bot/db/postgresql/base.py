@@ -14,4 +14,5 @@ class Base(DeclarativeBase):
 
         return f"<{self.__class__.__name__} {', '.join(cols)}>"
 
+
 # Configure Storag

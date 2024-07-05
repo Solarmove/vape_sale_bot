@@ -29,7 +29,7 @@ def store_window():
 
 def items_in_category_window():
     return Window(
-        Multi( 
+        Multi(
             Const("Выберите товар"),
             List(
                 Format(
@@ -38,7 +38,7 @@ def items_in_category_window():
                 ),
                 id="text_list",
                 items="items_list",
-                page_size=1
+                page_size=1,
             ),
             sep="\n\n",
         ),
@@ -68,10 +68,7 @@ def create_invoice_window():
             "Номер транзакции в боте: <code>{invoice_id}</code>\n\n"
             "<i>Сума автоматически конвертируеца в выбраную вами валюту</i>"
         ),
-        Url(
-            Const("Оплатить"),
-            Format('{url}')
-        ),
+        Url(Const("Оплатить"), Format("{url}")),
         Back(Const("Закрыть")),
         state=states.Purchase.create_invoice,
         getter=getters.invoice_getter,

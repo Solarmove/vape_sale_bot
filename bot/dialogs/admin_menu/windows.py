@@ -103,7 +103,7 @@ def select_item_for_edit_window():
         DynamicMedia(selector="current_photo"),
         Button(
             Const("Добавить товар"),
-            id='add_item',
+            id="add_item",
             on_click=selected.on_start_add_item,
         ),
         items_in_category_kb(selected.on_select_item_for_edit),
@@ -134,7 +134,9 @@ def enter_new_item_price_window():
 def enter_new_item_description_window():
     return Window(
         Const("Введите описание товара (до 500 символов)"),
-        TextInput(id="item_description", on_success=selected.on_enter_new_item_description),
+        TextInput(
+            id="item_description", on_success=selected.on_enter_new_item_description
+        ),
         Back(Const("Назад")),
         state=states.CreateItem.enter_description,
     )
@@ -157,22 +159,20 @@ def confirm_new_item_create_window():
         Multi(
             Const("Подтвердите создание нового товара"),
             Format(
-                "<b>{name}</b>\n\nЦена: <code>{price} UAH</code>\n\n"
-                "<i>{desc}</i>"
+                "<b>{name}</b>\n\nЦена: <code>{price} UAH</code>\n\n" "<i>{desc}</i>"
             ),
             sep="\n\n",
         ),
         DynamicMedia(selector="photo"),
         Button(
             Const("Подтвердить"),
-            id='save_new_item',
+            id="save_new_item",
             on_click=selected.on_save_new_item,
         ),
         Back(Const("Назад")),
         state=states.CreateItem.confirm,
         getter=getters.new_item_getter,
     )
-
 
 
 def select_edit_param_of_item_window():

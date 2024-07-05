@@ -95,7 +95,7 @@ async def on_send_new_category(
 async def on_confirm_delete_category(
     call: CallbackQuery, widget: Button, manager: DialogManager
 ):
-    category_id = manager.dialog_data["category_id"]
+    category_id = manager.start_data["category_id"]
     repo: Repo = manager.middleware_data["repo"]
     try:
         await repo.user_repo.delete_category(category_id)
@@ -234,7 +234,6 @@ async def on_select_edit_param(
     await manager.start(edit_params_mapping[item_id], data=manager.dialog_data)
 
 
-
 async def on_change_item_name(
     message: Message,
     widget: ManagedTextInput,
@@ -303,14 +302,15 @@ async def on_send_new_photo_for_item(
         photo_id = message.photo[-1].file_id
         photo_unique_id = message.photo[-1].file_unique_id
         try:
-            await repo.user_repo.update_item(item_id, file_id=photo_id, file_unique_id=photo_unique_id)
+            await repo.user_repo.update_item(
+                item_id, file_id=photo_id, file_unique_id=photo_unique_id
+            )
         except Exception:
             await message.answer(f"Ошибка при изменении фото товара")
             return await manager.done()
     else:
         await message.answer("Отправьте фото")
         return
-
 
 
 async def on_confirm_delete_item(
@@ -335,7 +335,7 @@ async def on_select_new_item_category(
         category_id = int(category_id)  # type: ignore
     except ValueError:
         logging.error(f"category_id is not integer: {category_id}")
-    
+
     item_id = manager.start_data["item_id"]
     repo: Repo = manager.middleware_data["repo"]
     try:
@@ -345,4 +345,3 @@ async def on_select_new_item_category(
         return await manager.done()
     await call.answer(f"Категория товара изменена", show_alert=True)
     await manager.done()
-    
