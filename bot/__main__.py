@@ -69,9 +69,9 @@ async def main():
     dp.message.filter(F.chat.type == "private")
     dp.update.middleware(i18n_dialog_middleware)
     dp.update.middleware(DbSessionMiddleware(db_pool))
-    if config.bot_mode == "dev":
-        dp.update.middleware(DevsProtectMiddleware())
-        dp.update.outer_middleware(DevsProtectMiddleware())
+    # if config.bot_mode == "dev":
+    #     dp.update.middleware(DevsProtectMiddleware())
+    #     dp.update.outer_middleware(DevsProtectMiddleware())
 
     # Router including
     router.include_routers(*routers_list)
@@ -88,7 +88,12 @@ async def main():
     i18n_middleware.setup(dispatcher=dp)
     await bot.delete_webhook(drop_pending_updates=True)
     await set_default_commands(bot)
-    web.run_app(app, port=config.webhook_port, host=config.webhook_host)
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(
+        runner, host=config.webhook_host, port=config.webhook_port
+    )
+    await site.start()
     await dp.start_polling(bot)
 
 

@@ -33,7 +33,7 @@ def items_in_category_window():
             Const("Выберите товар"),
             List(
                 Format(
-                    "<b>{item[1]}</b>\n\nЦена: <code>{item[2]} UAH</code>\n\n"
+                    "<b>{item[1]}</b>\n\nЦена: <code>{item[2]} USD</code>\n\n"
                     "<i>{item[3]}</i>"
                 ),
                 id="text_list",

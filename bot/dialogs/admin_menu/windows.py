@@ -91,7 +91,7 @@ def select_item_for_edit_window():
             Const("Выберите товар для редактирования"),
             List(
                 Format(
-                    "<b>{item[1]}</b>\n\nЦена: <code>{item[2]} UAH</code>\n\n"
+                    "<b>{item[1]}</b>\n\nЦена: <code>{item[2]} USD</code>\n\n"
                     "<i>{item[3]}</i>"
                 ),
                 id="text_list",

@@ -95,8 +95,8 @@ class NowPayments:
                 
     async def create_invoice(self, invoice_data: CreateInvoiceData) -> CreatedInvoiceResult:
         data = invoice_data.model_dump_json()
-        # url = 'https://api.nowpayments.io/v1/invoice'
-        url = 'https://api-sandbox.nowpayments.io/v1/invoice'
+        url = 'https://api.nowpayments.io/v1/invoice'
+        # url = 'https://api-sandbox.nowpayments.io/v1/invoice'
         response = await self.make_request(
             url=url, request_type="POST", data=data
         )
