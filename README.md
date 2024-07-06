@@ -81,7 +81,7 @@
   [Service]
   User=root
   WorkingDirectory=/path/to/your/bot
-  ExecStart=/path/to/your/bot/venv/bin/python -m bot
+  ExecStart=/path/to/your/bot/venv/bin/python3.11 -m bot
   Restart=always
 
   [Install]
