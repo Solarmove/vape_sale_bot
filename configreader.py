@@ -13,6 +13,9 @@ class Config(BaseSettings):
     admins: list
     # DB
     postgredsn: PostgresDsn
+    ps_user: str
+    ps_password: str
+    ps_db: str
 
     # NowPayments Keys
     x_api_key: str

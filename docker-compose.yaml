@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  bot:
+    build: .
+    env_file:
+      - .env  # Указываем файл с переменными окружения
+
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:latest
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${PS_USER}
+      POSTGRES_PASSWORD: ${PS_PASSWORD}
+      POSTGRES_DB: ${PS_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:latest
+    volumes:
+      - redis_data:/data
+
+volumes:
+  postgres_data:
+  redis_data:
