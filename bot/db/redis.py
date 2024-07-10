@@ -1,4 +1,4 @@
 from redis.asyncio import Redis
 
-redis = Redis('redis')
+redis = Redis(host='redis')
 
