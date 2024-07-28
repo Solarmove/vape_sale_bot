@@ -21,9 +21,7 @@ from bot.db.postgresql import Repo
 async def main_menu_getter(
     dialog_manager: DialogManager, event_from_user: User, bot: Bot, repo: Repo, **kwargs
 ):
-    print(event_from_user.id, config.admins)
-    # event_from_user.id in config.admins
-    return {"is_admin": True}
+    return {"is_admin": event_from_user.id in config.admins}
 
 
 async def category_getter(
